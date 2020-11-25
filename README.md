@@ -40,3 +40,39 @@ The `run.sh` file can be used in order to run the models within a docker contain
 **main file**
 
 The `main.py` file calls all the other modules.
+
+## Usage
+
+**Image input**
+
+The `sequence.py` file expects the CT images to be stored in `hdf5` file format
+with the following structure:
+
+```
+./data/image_data/image_files.h5
+|
+|---ct_images
+|       |------pid_1
+|       |------pid_2
+|       ...
+|       |------pid_n
+|
+|
+|---ct_sgmt
+        |------pid_1
+        |------pid_2
+        ...
+        |------pid_n
+
+```
+with `pid` given by the respective [TCIA](https://www.cancerimagingarchive.net/) Subject IDs.
+
+**Pre-trained weights**
+
+The pre-trained networks expect the weights to be found at `./data/weights/<weight_file.h5>`
+names of the files can be sprecified in `parameter/par.yml`.
+For the C3D model the weights can be downloaded as BVLC caffe file [from the official web page](https://vlg.cs.dartmouth.edu/c3d/).
+In order to convert them to `numpy/hdf5` format `utils/convert.py` can be used.
+Weights for the VGG16 model can be downloaded from
+[here](https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5).
+ 
