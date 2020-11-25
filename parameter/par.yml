@@ -25,6 +25,7 @@ training:
 data:
     general:
         batch_size: 16
+        slices: 16
         image_size: [112, 112, 3]
         bundle_size: [126, 126, 3]
         image_path: './data/image_data/image_files.h5'

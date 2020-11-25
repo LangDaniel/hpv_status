@@ -28,21 +28,24 @@ class CustomSequence(Sequence):
 
     def get_indices(self, sgmt):
         ''' This function takes the segmenation as an argument and has to return
-        the indices of all the bundles. For the paper only one bundle is cut from
-        each input image, but for other tasks you may want to change this.
+        the indices of all the bundles. For the paper only one bundle 16 bundles are cut from
+        each input image (for the VGG model), but for other tasks you may want to change this.
         Indices have to be returned as list in the order:
         [x dimensions], [y dimensions], [z dimensions]'''
 
         shape = sgmt.shape    
         x_contour, y_contour, z_contour = np.nonzero(sgmt)
+
+        slices = self.args['slices']
     
         # select z indices
         zmin = self.indices_helper(
             z_contour,
-            self.args['bundle_size'][-1],
+            self.args['bundle_size'][-1]*slices,
             shape[-1]
         )
         zmax = zmin + self.args['bundle_size'][-1]
+        z_idx = np.arange(zmin, zmax, self.args['bundle_size'][-1])
             
         # select x indices
         x_contour = x_contour[np.where(
@@ -66,7 +69,7 @@ class CustomSequence(Sequence):
             shape[1]
         )
         
-        return [xmin], [ymin], [zmin]
+        return [xmin]*slices, [ymin]*slices, z_idx
 
     def indices_helper(self, contour, size, maximum):
         '''helper function for get_indice() '''
