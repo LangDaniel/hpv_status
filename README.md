@@ -36,6 +36,7 @@ The `metrics.py` file holds all the metrics to be taped during training.
 **run file**
 
 The `run.sh` file can be used in order to run the models within a docker container.
+The file to construct the docker images is given in `docker/hpv_status`.
 
 **main file**
 
@@ -69,10 +70,13 @@ with `pid` given by the respective [TCIA](https://www.cancerimagingarchive.net/)
 
 **Pre-trained weights**
 
-The pre-trained networks expect the weights to be found at `./data/weights/<weight_file.h5>`
-names of the files can be sprecified in `parameter/par.yml`.
-For the C3D model the weights can be downloaded as BVLC caffe file [from the official web page](https://vlg.cs.dartmouth.edu/c3d/).
+The pre-trained networks expect the weights to be found at `./data/weights/<weight_file.h5>`.
+Names of the files can be sprecified in `parameter/par.yml`.
+For the C3D model the weights can be downloaded as a BVLC caffe file
+[from the official web page](https://vlg.cs.dartmouth.edu/c3d/).
 In order to convert them to `numpy/hdf5` format `utils/convert.py` can be used.
+A docker image to install caffe can be constructed with the file given in `docker/convert_caffe`,
+`utils/convert.sh` can be used to run a container constructed with this file.
 Weights for the VGG16 model can be downloaded from
 [here](https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5).
  
