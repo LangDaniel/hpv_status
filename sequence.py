@@ -41,10 +41,10 @@ class CustomSequence(Sequence):
         # select z indices
         zmin = self.indices_helper(
             z_contour,
-            self.args['bundle_size'][-1]*slices,
+            self.args['bundle_size'][-1] * slices,
             shape[-1]
         )
-        zmax = zmin + self.args['bundle_size'][-1]
+        zmax = zmin + self.args['bundle_size'][-1] * slices
         z_idx = np.arange(zmin, zmax, self.args['bundle_size'][-1])
             
         # select x indices
