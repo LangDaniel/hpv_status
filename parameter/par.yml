@@ -1,0 +1,72 @@
+output:
+    folder: './outputs/VGG16/test'
+    sub: 'run'
+
+training:
+    epochs: 50
+    workers: 15
+    callbacks:
+        ckpt_loss:
+            filepath: '<OUTPUTDIR>/checkpoints/best_loss'
+            monitor: 'val_loss'
+            save_weights_only: True
+            save_best_only: True
+        ckpt_roc:
+            filepath: '<OUTPUTDIR>/checkpoints/best_roc'
+            monitor: 'val_roc_auc'
+            save_weights_only: True
+            save_best_only: True
+        tensor_board:
+            log_dir: '<OUTPUTDIR>/tb_logs' 
+            histogram_freq: 50
+        scheduler:
+            type: 'const'
+            learning_rate: 0.0001
+data:
+    general:
+        batch_size: 16
+        image_size: [112, 112, 3]
+        bundle_size: [126, 126, 3]
+        image_path: './data/image_data/image_files.h5'
+        rescale:
+            input_range: [-250., 250]
+            output_range: [0., 255.]
+    train:
+        df_path: './data/patient_data/train.csv' 
+        bundles_path: './data/bundles/two_dim/train.h5' 
+        weight_dict: {0: 2.08, 1: 0.66} # OPC + HNSCC 
+        training: True
+        augment:
+            flip: True
+            rot: True
+    valid:
+        df_path: './data/patient_data/valid.csv' 
+        bundles_path: './data/bundles/two_dim/valid.h5' 
+        weight_dict: {0: 2.37, 1: 0.63} # HN PET CT
+        training: False
+        augment:
+            flip: False
+            rot: False
+
+model:
+    size:
+        input_size: [112, 112, 3]
+        output_size: 1
+
+        dense_units: [256, 64]
+        dense_drop: [0.25, 0.25]
+        dense_bn: False
+
+        activation: 'relu'
+        out_activation: 'sigmoid'
+
+    optimizer:
+        name: 'adam'
+
+    loss:
+        type: 'binary_crossentropy'
+
+    trained:
+        use: True
+        include_top: False
+        path: './data/weights/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5' 
