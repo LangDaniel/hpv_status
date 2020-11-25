@@ -151,7 +151,7 @@ class Train():
 
 
 if __name__ == '__main__':
-    pdir = Path('./parameter/process')
+    pdir = Path('./parameter')
     pfiles = sorted([ff for ff in pdir.iterdir() if ff.suffix == '.yml'])
     
     for pf in pfiles:
