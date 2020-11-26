@@ -237,7 +237,7 @@ class CustomSequence(Sequence):
         end_idx = min(end_idx, self.total_count)
 
         batch_size = end_idx - start_idx
-        img_batch = np.empty((batch_size, 16, 112, 112, 3))
+        img_batch = np.empty((batch_size, *self.args['image_size']))
 
         batch_df = self.bundle_df.iloc[start_idx: end_idx].reset_index(drop=True)
 
@@ -253,12 +253,14 @@ class CustomSequence(Sequence):
                 if self.args['training']:
                     img = self.augmentation(img)
 
+                img_batch[ii] = img
                 class_batch.append(self.out_dict[row['identifier']])
-                for jj in range(0, 16):
-                    img_batch[ii][jj] = img[:, :, jj*3:(jj+1)*3]  
+                    
 
         class_batch = np.array(class_batch)
         img_batch = img_batch.astype(np.float32)
+
+        print(img_batch.shape)
 
         # set weights
         weights = np.array([self.args['weight_dict'][ii] for ii in class_batch])
