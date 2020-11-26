@@ -3,7 +3,7 @@ output:
     sub: 'run'
 
 training:
-    epochs: 50
+    epochs: 200
     workers: 15
     callbacks:
         ckpt_loss:
@@ -33,7 +33,7 @@ data:
             output_range: [0., 255.]
     train:
         df_path: './data/patient_data/train.csv' 
-        bundles_path: './data/bundles/train.h5' 
+        bundles_path: './data/bundles/three_dim/train.h5' 
         weight_dict: {0: 2.08, 1: 0.66} # OPC + HNSCC 
         training: True
         augment:
@@ -41,7 +41,7 @@ data:
             rot: True
     valid:
         df_path: './data/patient_data/valid.csv' 
-        bundles_path: './data/bundles/valid.h5' 
+        bundles_path: './data/bundles/three_dim/valid.h5' 
         weight_dict: {0: 2.37, 1: 0.63} # HN PET CT
         training: False
         augment:
