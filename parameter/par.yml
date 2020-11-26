@@ -1,9 +1,9 @@
 output:
-    folder: './outputs/C3D/test'
+    folder: './outputs/CNN/test'
     sub: 'run'
 
 training:
-    epochs: 50
+    epochs: 200
     workers: 15
     callbacks:
         ckpt_loss:
@@ -50,11 +50,18 @@ data:
 
 model:
     size:
-        input_size: [16, 112, 112, 3]
+        input_size: [112, 112, 48, 1]
         output_size: 1
 
-        dense_units: [1024, 64]
-        dense_drop: [0.35, 0.25]
+        conv_filters: [16, 32, 32, 64, [128, 128]]
+        pool_kernel: [[2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2]] 
+        pool_stride: [[2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2]] 
+        conv_kernel: [3, 3, 3]
+        conv_drop: [False, False, False, False, [False, 0.25]]
+        conv_bn: False
+
+        dense_units: [256, 128]
+        dense_drop: [0.25, 0.25]
         dense_bn: False
 
         activation: 'relu'
