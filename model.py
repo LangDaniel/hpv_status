@@ -97,8 +97,7 @@ class Model():
                     if name in layer_names and (name.startswith('conv') or name.startswith('fc')):
                         print('using weights of layer ' + name)
                         layer.set_weights(
-                            #[ff[name]['kernel'], ff[name]['bias']])
-                            [ff[name][name]['kernel:0'], ff[name][name]['bias:0']])
+                            [ff[name]['kernel'], ff[name]['bias']])
 
             base_model.trainable = False
 
