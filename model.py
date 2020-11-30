@@ -39,12 +39,12 @@ class Model():
         inputs = keras.layers.Input(shape=self.args['size']['input_size'])
     
         conv1 = keras.layers.Conv3D(64, (3, 3, 3), activation='relu',
-                       padding='same', name='conv1')(inputs)
+                       padding='same', name='conv1a')(inputs)
         pool1 = keras.layers.MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2),
                              padding='valid', name='pool1')(conv1)
     
         conv2 = keras.layers.Conv3D(128, (3, 3, 3), activation='relu',
-                       padding='same', name='conv2')(pool1)
+                       padding='same', name='conv2a')(pool1)
         pool2 = keras.layers.MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
                              padding='valid', name='pool2')(conv2)
     
@@ -97,8 +97,8 @@ class Model():
                     if name in layer_names and (name.startswith('conv') or name.startswith('fc')):
                         print('using weights of layer ' + name)
                         layer.set_weights(
-                            [ff[name]['kernel'], ff[name]['bias']])
-                            #[ff[name][name]['kernel:0'], ff[name][name]['bias:0']])
+                            #[ff[name]['kernel'], ff[name]['bias']])
+                            [ff[name][name]['kernel:0'], ff[name][name]['bias:0']])
 
             base_model.trainable = False
 
