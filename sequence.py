@@ -208,19 +208,27 @@ class CustomSequence(Sequence):
 
     def getitem_helper(self):
         ''' returns the final indices '''
-        x_ii = np.random.randint(
-            0, self.args['bundle_size'][0] - self.args['image_size'][0] + 1
-        )
+        # use random indices for training
+        if self.args['training']:
+            x_ii = np.random.randint(
+                0, self.args['bundle_size'][0] - self.args['image_size'][0] + 1
+            )
+
+            y_ii = np.random.randint(
+                0, self.args['bundle_size'][1] - self.args['image_size'][1] + 1
+            )
+
+            z_ii = np.random.randint(
+                0, self.args['bundle_size'][2] - self.args['image_size'][2] + 1
+            )
+        # center for validation
+        else:
+            x_ii = (self.args['bundle_size'][0] - self.args['image_size'][0]) // 2
+            y_ii = (self.args['bundle_size'][1] - self.args['image_size'][1]) // 2
+            z_ii = (self.args['bundle_size'][2] - self.args['image_size'][2]) // 2
+
         x_ff = x_ii + self.args['image_size'][0]
-
-        y_ii = np.random.randint(
-            0, self.args['bundle_size'][1] - self.args['image_size'][1] + 1
-        )
         y_ff = y_ii + self.args['image_size'][1]
-
-        z_ii = np.random.randint(
-            0, self.args['bundle_size'][2] - self.args['image_size'][2] + 1
-        )
         z_ff = z_ii + self.args['image_size'][2]
 
         return x_ii, x_ff, y_ii, y_ff, z_ii, z_ff
