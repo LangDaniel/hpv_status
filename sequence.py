@@ -208,19 +208,27 @@ class CustomSequence(Sequence):
 
     def getitem_helper(self):
         ''' returns the final indices '''
-        x_ii = np.random.randint(
-            0, self.args['bundle_size'][0] - self.args['image_size'][0] + 1
-        )
+        # use random indices for training
+        if self.args['training']:
+            x_ii = np.random.randint(
+                0, self.args['bundle_size'][0] - self.args['image_size'][0] + 1
+            )
+
+            y_ii = np.random.randint(
+                0, self.args['bundle_size'][1] - self.args['image_size'][1] + 1
+            )
+
+            z_ii = np.random.randint(
+                0, self.args['bundle_size'][2] - self.args['image_size'][2] + 1
+            )
+        # center for validation
+        else:
+            x_ii = (self.args['bundle_size'][0] - self.args['image_size'][0]) // 2
+            y_ii = (self.args['bundle_size'][1] - self.args['image_size'][1]) // 2
+            z_ii = (self.args['bundle_size'][2] - self.args['image_size'][2]) // 2
+
         x_ff = x_ii + self.args['image_size'][0]
-
-        y_ii = np.random.randint(
-            0, self.args['bundle_size'][1] - self.args['image_size'][1] + 1
-        )
         y_ff = y_ii + self.args['image_size'][1]
-
-        z_ii = np.random.randint(
-            0, self.args['bundle_size'][2] - self.args['image_size'][2] + 1
-        )
         z_ff = z_ii + self.args['image_size'][2]
 
         return x_ii, x_ff, y_ii, y_ff, z_ii, z_ff
@@ -234,7 +242,7 @@ class CustomSequence(Sequence):
         end_idx = min(end_idx, self.total_count)
 
         batch_size = end_idx - start_idx
-        img_batch = np.empty((batch_size, *self.args['image_size']))
+        img_batch = np.empty((batch_size, 16, 112, 112, 3))
 
         batch_df = self.bundle_df.iloc[start_idx: end_idx].reset_index(drop=True)
 
@@ -250,14 +258,14 @@ class CustomSequence(Sequence):
                 if self.args['training']:
                     img = self.augmentation(img)
 
-                img_batch[ii] = img
                 class_batch.append(self.out_dict[row['identifier']])
+                for jj in range(0, 16):
+                    img_batch[ii][jj] = img[:, :, jj*3:(jj+1)*3]  
 
         class_batch = np.array(class_batch)
         img_batch = img_batch.astype(np.float32)
-        img_batch = img_batch[..., np.newaxis]
 
         # set weights
         weights = np.array([self.args['weight_dict'][ii] for ii in class_batch])
 
-        return img_batch, class_batch, weights
+        return img_batch.astype(np.float32), class_batch, weights
